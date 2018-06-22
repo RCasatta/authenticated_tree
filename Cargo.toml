@@ -1,0 +1,9 @@
+[package]
+name = "authenticated_tree"
+version = "0.1.0"
+authors = ["Riccardo Casatta <riccardo@casatta.it>"]
+
+[dependencies]
+integer-encoding = "1.0.5"
+rust-crypto = "~0.2"
+data-encoding = "2.1.1"
