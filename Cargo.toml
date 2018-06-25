@@ -7,3 +7,4 @@ authors = ["Riccardo Casatta <riccardo@casatta.it>"]
 integer-encoding = "1.0.5"
 rust-crypto = "~0.2"
 data-encoding = "2.1.1"
+rand = "0.5.2"
