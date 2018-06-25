@@ -160,17 +160,17 @@ fn hash(vec : Vec<u8>) -> Sha256Hash {
 impl Node {
 
     fn add( &mut self, key: Vec<u8> , value: Vec<u8>) {
-        match self {
+        let new_node = match self {
             Node::Leaf(leaf) => {
                 let mut map = HashMap::new();
                 let (a,b) = key.split_at(1);
                 map.insert(a[0], Box::new(Node::Leaf(Leaf::new(b.to_vec(), value))));
-                let a = leaf.remaining_key.remove(0);
-                map.insert(a, Box::new(Node::Leaf(Leaf::new(leaf.remaining_key.clone(), leaf.value.clone()) )));
+                let a = leaf.remaining_key[0];
+                map.insert(a, Box::new(Node::Leaf(Leaf::new(leaf.remaining_key[1..].to_vec(), leaf.value.clone()) )));
                 let new_node = Node::InnerNode(InnerNode::new(map));
-                mem::replace(self, new_node);
+                Some(new_node)
             },
-            Node::InnerNode(ref mut inner) => {
+            Node::InnerNode(inner) => {
                 let (a, b) = key.split_at(1);
                 let mut map = inner.map.borrow_mut();
                 match map.remove(&a[0]) {
@@ -183,7 +183,11 @@ impl Node {
                         map.insert(a[0], Box::new(new_node));
                     }
                 }
+                None
             },
+        };
+        if let Some(new_node) = new_node {
+            mem::replace(self, new_node);
         }
     }
 
